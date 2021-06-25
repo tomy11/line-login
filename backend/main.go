@@ -34,7 +34,13 @@ func main() {
 	usersRepo := repository.NewUsersRepository(conn)
 	authController := controller.NewAuthController(usersRepo)
 	authRoutes := routes.NewAuthRoutes(authController)
+
+	slipUserRepo := repository.NewSlipUserRepository(conn)
+	slipUserController := controller.NewSlipUserController(slipUserRepo)
+	slipUserRoutes := routes.NewSlipUserRoutes(slipUserController)
+
 	authRoutes.Install(app)
+	slipUserRoutes.Install(app)
 
 	app.Listen(":3000")
 }
