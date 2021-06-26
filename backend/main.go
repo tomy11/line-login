@@ -35,12 +35,27 @@ func main() {
 	authController := controller.NewAuthController(usersRepo)
 	authRoutes := routes.NewAuthRoutes(authController)
 
+	pointsPepo := repository.NewPointRepository(conn)
+	pointController := controller.NewPointsController(pointsPepo)
+	pointRoutes := routes.NewpointsRoutes(pointController)
+
 	slipUserRepo := repository.NewSlipUserRepository(conn)
 	slipUserController := controller.NewSlipUserController(slipUserRepo)
 	slipUserRoutes := routes.NewSlipUserRoutes(slipUserController)
 
+	productRepo := repository.NewProductRepository(conn)
+	productController := controller.NewProductController(productRepo)
+	productRoutes := routes.NewProductRoutes(productController)
+
+	pointToProductRepo := repository.NewPointToProductRepository(conn)
+	pointToProductController := controller.NewPointToProductController(pointToProductRepo)
+	pointToProductRoutes := routes.NewPointToProductRoutes(pointToProductController)
+
 	authRoutes.Install(app)
 	slipUserRoutes.Install(app)
+	productRoutes.Install(app)
+	pointRoutes.Install(app)
+	pointToProductRoutes.Install(app)
 
 	app.Listen(":3000")
 }

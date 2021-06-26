@@ -8,6 +8,7 @@ require (
 	github.com/gofiber/jwt/v2 v2.2.3 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/stretchr/testify v1.7.0 // indirect
+	go.mongodb.org/mongo-driver v1.5.3
 	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e // indirect
 	gopkg.in/asaskevich/govalidator.v9 v9.0.0-20180315120708-ccb8e960c48f // indirect
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22 // indirect
