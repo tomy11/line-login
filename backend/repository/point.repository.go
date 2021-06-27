@@ -8,6 +8,8 @@ import (
 )
 
 const PointCollection = "point"
+const SlipsCallection = "slipuser"
+const ConnDb = "linepoint"
 
 type PointRepository interface {
 	Save(point *models.Point) error
@@ -15,8 +17,8 @@ type PointRepository interface {
 	GetById(id string) (point *models.Point, err error)
 	GetAll() (point []*models.Point, err error)
 	Delete(id string) error
+	GetPointByUserId(userId string) (point []*models.Point, err error)
 }
-
 type pointRepository struct {
 	c *mgo.Collection
 }
@@ -45,4 +47,12 @@ func (r *pointRepository) GetAll() (point []*models.Point, err error) {
 
 func (r *pointRepository) Delete(id string) error {
 	return r.c.RemoveId(bson.ObjectIdHex(id))
+}
+
+func (r *pointRepository) GetPointByUserId(userId string) (point []*models.Point, err error) {
+	err = r.c.Find(bson.M{"userid": userId}).All(&point)
+	if err != nil {
+		panic(err)
+	}
+	return point, err
 }

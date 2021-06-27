@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/tomy11/line-api/db"
 	"github.com/tomy11/line-api/models"
 	"gopkg.in/mgo.v2"
@@ -39,6 +41,7 @@ func (r *slipUserRepository) GetById(id string) (slip *models.SlipUser, err erro
 }
 
 func (r *slipUserRepository) GetAll() (slips []*models.SlipUser, err error) {
+	fmt.Println("call slip : ")
 	err = r.c.Find(bson.M{}).All(&slips)
 	return slips, err
 }

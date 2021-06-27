@@ -32,23 +32,21 @@ func main() {
 	})
 
 	usersRepo := repository.NewUsersRepository(conn)
-	authController := controller.NewAuthController(usersRepo)
-	authRoutes := routes.NewAuthRoutes(authController)
-
-	pointsPepo := repository.NewPointRepository(conn)
-	pointController := controller.NewPointsController(pointsPepo)
-	pointRoutes := routes.NewpointsRoutes(pointController)
-
 	slipUserRepo := repository.NewSlipUserRepository(conn)
-	slipUserController := controller.NewSlipUserController(slipUserRepo)
-	slipUserRoutes := routes.NewSlipUserRoutes(slipUserController)
-
 	productRepo := repository.NewProductRepository(conn)
-	productController := controller.NewProductController(productRepo)
-	productRoutes := routes.NewProductRoutes(productController)
-
+	pointsPepo := repository.NewPointRepository(conn)
 	pointToProductRepo := repository.NewPointToProductRepository(conn)
+
+	authController := controller.NewAuthController(usersRepo)
+	pointController := controller.NewPointsController(pointsPepo, slipUserRepo)
+	slipUserController := controller.NewSlipUserController(slipUserRepo)
+	productController := controller.NewProductController(productRepo)
 	pointToProductController := controller.NewPointToProductController(pointToProductRepo)
+
+	authRoutes := routes.NewAuthRoutes(authController)
+	pointRoutes := routes.NewpointsRoutes(pointController)
+	slipUserRoutes := routes.NewSlipUserRoutes(slipUserController)
+	productRoutes := routes.NewProductRoutes(productController)
 	pointToProductRoutes := routes.NewPointToProductRoutes(pointToProductController)
 
 	authRoutes.Install(app)

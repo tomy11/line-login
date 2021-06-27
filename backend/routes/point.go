@@ -19,4 +19,5 @@ func (r *pointsRoutes) Install(app *fiber.App) {
 	app.Get("/points/:id", AuthRequired, r.pointsController.GetPoints)
 	app.Put("/points/:id", AuthRequired, r.pointsController.PutPoints)
 	app.Delete("/points/:id", AuthRequired, r.pointsController.DeletePoints)
+	app.Get("/points/user/:id", AuthRequired, r.pointsController.GetPointByUserId)
 }

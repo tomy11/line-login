@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -20,14 +21,16 @@ type PointsController interface {
 	GetAllPoints(ctx *fiber.Ctx) error
 	PutPoints(ctx *fiber.Ctx) error
 	DeletePoints(ctx *fiber.Ctx) error
+	GetPointByUserId(ctx *fiber.Ctx) error
 }
 
 type pointsController struct {
-	pointsRepo repository.PointRepository
+	pointsRepo   repository.PointRepository
+	slipUserRepo repository.SlipUserRepository
 }
 
-func NewPointsController(pointsRepo repository.PointRepository) PointsController {
-	return &pointsController{pointsRepo}
+func NewPointsController(pointsRepo repository.PointRepository, slipUserRepo repository.SlipUserRepository) PointsController {
+	return &pointsController{pointsRepo, slipUserRepo}
 }
 
 func (c *pointsController) PostPoints(ctx *fiber.Ctx) error {
@@ -77,6 +80,13 @@ func (c *pointsController) GetPoints(ctx *fiber.Ctx) error {
 	if err != nil {
 		panic(err)
 	}
+
+	results, err := c.slipUserRepo.GetById("60d75738c70ad0408f9b1b42")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("res :", results)
 
 	if err == mgo.ErrNotFound || terget.UserId != payload.Id {
 		return ctx.
@@ -172,4 +182,22 @@ func (c *pointsController) DeletePoints(ctx *fiber.Ctx) error {
 	c.pointsRepo.Delete(id)
 	return ctx.Status(http.StatusNoContent).JSON(bson.M{"message": "delete success"})
 
+}
+
+func (c *pointsController) GetPointByUserId(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+	if !bson.IsObjectIdHex(id) {
+		panic("not find id")
+	}
+	terget, err := c.pointsRepo.GetPointByUserId(id)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(terget)
+	if err != nil {
+		return ctx.
+			Status(http.StatusInternalServerError).
+			JSON(util.NewJError(err))
+	}
+	return ctx.Status(http.StatusOK).JSON(terget)
 }
